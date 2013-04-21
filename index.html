@@ -147,16 +147,25 @@
         wave = parseInt(waveType.value);
     });
 
-//    var isAlreadyPressed = false;
+    var keyArray = [];
+    Array.prototype.isPressed = function(key){
+        var result = false;
+        if(keyArray.indexOf(key) > -1) {
+            result = true;
+        }
+        return result;
+    }
+
     $(document).on("keypress", function(e) {
-//        if(isAlreadyPressed) return;
-//        isAlreadyPressed = true;
+        var isAlreadyPressed = keyArray.isPressed(e.keyCode);
+        if(isAlreadyPressed) return;
+        isAlreadyPressed = true;
+        var upKey = null;
         e.preventDefault();
         e.stopPropagation();
         var octaveShift = 1;
         var turnOff = null;
         var key = e.keyCode;
-        console.log(e.keyCode);
         var frequency = 0;
         var doPlay = true;
         switch (key) {
@@ -164,84 +173,100 @@
                 frequency = 131;
                 turnOff = $("#section"+octaveShift).find(".c");
                 turnOff.css("background", "#F00");
+                keyArray.push(122);
                 break;
             case 115:
                 frequency = 139;
                 turnOff = $("#section"+octaveShift).find(".cd");
                 turnOff.css("background", "#F00");
+                keyArray.push(115);
                 break;
             case 120:
                 frequency = 147;
                 turnOff = $("#section"+octaveShift).find(".d");
                 turnOff.css("background", "#F00");
+                keyArray.push(120);
                 break;
             case 100:
                 frequency = 156;
                 turnOff = $("#section"+octaveShift).find(".de");
                 turnOff.css("background", "#F00");
+                keyArray.push(100);
                 break;
             case 99:
                 frequency = 165;
                 turnOff = $("#section"+octaveShift).find(".e");
                 turnOff.css("background", "#F00");
+                keyArray.push(99);
                 break;
             case 118:
                 frequency = 175;
                 turnOff = $("#section"+octaveShift).find(".f");
                 turnOff.css("background", "#F00");
+                keyArray.push(118);
                 break;
             case 103:
                 frequency = 185;
                 turnOff = $("#section"+octaveShift).find(".fg");
                 turnOff.css("background", "#F00");
+                keyArray.push(103);
                 break;
             case 98:
                 frequency = 196;
                 turnOff = $("#section"+octaveShift).find(".g");
                 turnOff.css("background", "#F00");
+                keyArray.push(98);
                 break;
             case 104:
                 frequency = 208;
                 turnOff = $("#section"+octaveShift).find(".ga");
                 turnOff.css("background", "#F00");
+                keyArray.push(104);
                 break;
             case 110:
                 frequency = 220;
                 turnOff = $("#section"+octaveShift).find(".a");
                 turnOff.css("background", "#F00");
+                keyArray.push(110);
                 break;
             case 106:
                 frequency = 233;
                 turnOff = $("#section"+octaveShift).find(".ab");
                 turnOff.css("background", "#F00");
+                keyArray.push(106);
                 break;
             case 109:
                 frequency = 247;
                 turnOff = $("#section"+octaveShift).find(".b");
                 turnOff.css("background", "#F00");
+                keyArray.push(109);
                 break;
             case 44:
                 frequency = 131;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".c");
                 turnOff.css("background", "#F00");
+                keyArray.push(44);
                 break;
             case 113:
                 frequency = 131;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".c");
                 turnOff.css("background", "#F00");
+                keyArray.push(113);
                 break;
             case 50:
                 frequency = 139;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".cd");
                 turnOff.css("background", "#F00");
+                keyArray.push(50);
                 break;
             case 119:
                 frequency = 147;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".d");
+                keyArray.push(119);
                 turnOff.css("background", "#F00");
                 break;
             case 51:
@@ -249,54 +274,63 @@
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".de");
                 turnOff.css("background", "#F00");
+                keyArray.push(51);
                 break;
             case 101:
                 frequency = 165;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".e");
                 turnOff.css("background", "#F00");
+                keyArray.push(101);
                 break;
             case 114:
                 frequency = 175;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".f");
                 turnOff.css("background", "#F00");
+                keyArray.push(114);
                 break;
             case 53:
                 frequency = 185;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".fg");
                 turnOff.css("background", "#F00");
+                keyArray.push(53);
                 break;
             case 116:
                 frequency = 196;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".g");
                 turnOff.css("background", "#F00");
+                keyArray.push(116);
                 break;
             case 54:
                 frequency = 208;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".ga");
                 turnOff.css("background", "#F00");
+                keyArray.push(54);
                 break;
             case 121:
                 frequency = 220;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".a");
                 turnOff.css("background", "#F00");
+                keyArray.push(121);
                 break;
             case 55:
                 frequency = 233;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".ab");
                 turnOff.css("background", "#F00");
+                keyArray.push(55);
                 break;
             case 117:
                 frequency = 247;
                 octaveShift++;
                 turnOff = $("#section"+(octaveShift)).find(".b");
                 turnOff.css("background", "#F00");
+                keyArray.push(117);
                 break;
             default:
                 doPlay = false;
@@ -304,12 +338,11 @@
         }
         if(doPlay) {
             var osc = playSound(frequency*octaveShift, wave);
+            keyArray.push(upKey);
             osc.start(0);
             $(document).on("keyup", function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log(e.keyCode);
-//                isAlreadyPressed = false;
+                isAlreadyPressed = false;
+                keyArray.remove(key);
                 if(turnOff.hasClass("white")) {
                     turnOff.css("background", "#FFF");
                 } else if(turnOff.hasClass("black")) {
