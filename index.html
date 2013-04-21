@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Audio Api Test</title>
+    <script src="jQuery.v1.9.1.min.js" type="text/javascript"></script>
+<style type="text/css">
+    .white {
+        width:50px;
+        height:200px;
+        border:1px solid #000;
+        float:left;
+        position:relative;
+        right:25px;
+    }
+    .white:first-child {
+        position:relative;
+        right:0px;
+    }
+    .black {
+        width:25px;
+        height:100px;
+        background: #000;
+        float:left;
+        position:relative;
+        right:13px;
+    }
+    .de {
+        right:38px;
+    }
+    .e {
+        right:50px;
+    }
+    .f {
+        right:50px;
+    }
+    .fg {
+        right:62px;
+    }
+    .g {
+        right:75px;
+    }
+    .ga {
+        right:88px;
+    }
+    .a {
+        right:100px;
+    }
+    .ab {
+        right:113px;
+    }
+    .b {
+        right:125px;
+    }
+    .section {
+        float:left;
+        width:489px;
+    }
+    #section2 {
+        position: relative;
+        right:125px;
+    }
+    #keyboard {
+        width:978px;
+    }
+    .white {
+        font-size:0px;
+        z-index:1000;
+    }
+    .black {
+        font-size:0px;
+        z-index:5000;
+    }
+</style>
+</head>
+<body>
+
+<div id="keyboard">
+    <div class="section" id="section1">
+        <div class="c key white">c</div>
+        <div class="cd key black">cd</div>
+        <div class="d key white">d</div>
+        <div class="de key black">de</div>
+        <div class="e key white">e</div>
+        <div class="f key white">f</div>
+        <div class="fg key black">fg</div>
+        <div class="g key white">g</div>
+        <div class="ga key black">ga</div>
+        <div class="a key white">a</div>
+        <div class="ab key black">ab</div>
+        <div class="b key white">b</div>
+    </div>
+    <div class="section" id="section2">
+        <div class="c key white">c</div>
+        <div class="cd key black">cd</div>
+        <div class="d key white">d</div>
+        <div class="de key black">de</div>
+        <div class="e key white">e</div>
+        <div class="f key white">f</div>
+        <div class="fg key black">fg</div>
+        <div class="g key white">g</div>
+        <div class="ga key black">ga</div>
+        <div class="a key white">a</div>
+        <div class="ab key black">ab</div>
+        <div class="b key white">b</div>
+    </div>
+</div>
+
+<div style="clear:both;"></div>
+
+<select id="waveType">
+    <option value="0">Sine</option>
+    <option value="1">Square</option>
+    <option value="2">Sawtooth</option>
+    <option value="3">Triangle</option>
+</select>
+
+<script type="text/javascript">
+
+    Array.prototype.remove = function() {
+        var what, a = arguments, L = a.length, ax;
+        while (L && this.length) {
+            what = a[--L];
+            while ((ax = this.indexOf(what)) !== -1) {
+                this.splice(ax, 1);
+            }
+        }
+        return this;
+    };
+
+    context = new webkitAudioContext();
+    var wave = 0;
+
+    var playSound = function(frequency, type) {
+        gainNode = context.createGainNode();
+        gainNode.gain.value = 1.0;
+        gainNode.connect(context.destination);
+        oscillator = context.createOscillator();
+        oscillator.type = type; //0 = Sine Wave, 1 = Square Wave, 2 = Sawtooth wave, 3 = Triangle Wave
+        oscillator.frequency.value = frequency;  //Frequency in hertz
+        oscillator.connect(gainNode);
+        return oscillator
+    }
+
+    var osc = null;
+
+    $("#waveType").change(function() {
+        wave = parseInt(waveType.value);
+    });
+
+//    var isAlreadyPressed = false;
+    $(document).on("keypress", function(e) {
+//        if(isAlreadyPressed) return;
+//        isAlreadyPressed = true;
+        e.preventDefault();
+        e.stopPropagation();
+        var octaveShift = 1;
+        var turnOff = null;
+        var key = e.keyCode;
+        console.log(e.keyCode);
+        var frequency = 0;
+        var doPlay = true;
+        switch (key) {
+            case 122:
+                frequency = 131;
+                turnOff = $("#section"+octaveShift).find(".c");
+                turnOff.css("background", "#F00");
+                break;
+            case 115:
+                frequency = 139;
+                turnOff = $("#section"+octaveShift).find(".cd");
+                turnOff.css("background", "#F00");
+                break;
+            case 120:
+                frequency = 147;
+                turnOff = $("#section"+octaveShift).find(".d");
+                turnOff.css("background", "#F00");
+                break;
+            case 100:
+                frequency = 156;
+                turnOff = $("#section"+octaveShift).find(".de");
+                turnOff.css("background", "#F00");
+                break;
+            case 99:
+                frequency = 165;
+                turnOff = $("#section"+octaveShift).find(".e");
+                turnOff.css("background", "#F00");
+                break;
+            case 118:
+                frequency = 175;
+                turnOff = $("#section"+octaveShift).find(".f");
+                turnOff.css("background", "#F00");
+                break;
+            case 103:
+                frequency = 185;
+                turnOff = $("#section"+octaveShift).find(".fg");
+                turnOff.css("background", "#F00");
+                break;
+            case 98:
+                frequency = 196;
+                turnOff = $("#section"+octaveShift).find(".g");
+                turnOff.css("background", "#F00");
+                break;
+            case 104:
+                frequency = 208;
+                turnOff = $("#section"+octaveShift).find(".ga");
+                turnOff.css("background", "#F00");
+                break;
+            case 110:
+                frequency = 220;
+                turnOff = $("#section"+octaveShift).find(".a");
+                turnOff.css("background", "#F00");
+                break;
+            case 106:
+                frequency = 233;
+                turnOff = $("#section"+octaveShift).find(".ab");
+                turnOff.css("background", "#F00");
+                break;
+            case 109:
+                frequency = 247;
+                turnOff = $("#section"+octaveShift).find(".b");
+                turnOff.css("background", "#F00");
+                break;
+            case 44:
+                frequency = 131;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".c");
+                turnOff.css("background", "#F00");
+                break;
+            case 113:
+                frequency = 131;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".c");
+                turnOff.css("background", "#F00");
+                break;
+            case 50:
+                frequency = 139;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".cd");
+                turnOff.css("background", "#F00");
+                break;
+            case 119:
+                frequency = 147;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".d");
+                turnOff.css("background", "#F00");
+                break;
+            case 51:
+                frequency = 156;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".de");
+                turnOff.css("background", "#F00");
+                break;
+            case 101:
+                frequency = 165;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".e");
+                turnOff.css("background", "#F00");
+                break;
+            case 114:
+                frequency = 175;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".f");
+                turnOff.css("background", "#F00");
+                break;
+            case 53:
+                frequency = 185;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".fg");
+                turnOff.css("background", "#F00");
+                break;
+            case 116:
+                frequency = 196;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".g");
+                turnOff.css("background", "#F00");
+                break;
+            case 54:
+                frequency = 208;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".ga");
+                turnOff.css("background", "#F00");
+                break;
+            case 121:
+                frequency = 220;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".a");
+                turnOff.css("background", "#F00");
+                break;
+            case 55:
+                frequency = 233;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".ab");
+                turnOff.css("background", "#F00");
+                break;
+            case 117:
+                frequency = 247;
+                octaveShift++;
+                turnOff = $("#section"+(octaveShift)).find(".b");
+                turnOff.css("background", "#F00");
+                break;
+            default:
+                doPlay = false;
+                break;
+        }
+        if(doPlay) {
+            var osc = playSound(frequency*octaveShift, wave);
+            osc.start(0);
+            $(document).on("keyup", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(e.keyCode);
+//                isAlreadyPressed = false;
+                if(turnOff.hasClass("white")) {
+                    turnOff.css("background", "#FFF");
+                } else if(turnOff.hasClass("black")) {
+                    turnOff.css("background", "#000");
+                }
+                osc.stop(0);
+            });
+        }
+    });
+
+
+    $('.section').on("mousedown", ".key", function() {
+        var octave = parseInt($(this).parent().attr("id").replace("section", ""));
+        var pitch = $(this).text();
+        var frequency = 0;
+        var turnOff = null;
+        switch (pitch) {
+            case "c":
+                frequency = 131;
+                turnOff = $("#section"+octave).find(".c");
+                turnOff.css("background", "#F00");
+                break;
+            case "cd":
+                frequency = 139;
+                turnOff = $("#section"+octave).find(".cd");
+                turnOff.css("background", "#F00");
+                break;
+            case "d":
+                frequency = 147;
+                turnOff = $("#section"+octave).find(".d");
+                turnOff.css("background", "#F00");
+                break;
+            case "de":
+                frequency = 156;
+                turnOff = $("#section"+octave).find(".de");
+                turnOff.css("background", "#F00");
+                break;
+            case "e":
+                frequency = 165;
+                turnOff = $("#section"+octave).find(".e");
+                turnOff.css("background", "#F00");
+                break;
+            case "f":
+                frequency = 175;
+                turnOff = $("#section"+octave).find(".f");
+                turnOff.css("background", "#F00");
+                break;
+            case "fg":
+                frequency = 185;
+                turnOff = $("#section"+octave).find(".fg");
+                turnOff.css("background", "#F00");
+                break;
+            case "g":
+                frequency = 196;
+                turnOff = $("#section"+octave).find(".g");
+                turnOff.css("background", "#F00");
+                break;
+            case "ga":
+                frequency = 208;
+                turnOff = $("#section"+octave).find(".ga");
+                turnOff.css("background", "#F00");
+                break;
+            case "a":
+                frequency = 220;
+                turnOff = $("#section"+octave).find(".a");
+                turnOff.css("background", "#F00");
+                break;
+            case "ab":
+                frequency = 233;
+                turnOff = $("#section"+octave).find(".ab");
+                turnOff.css("background", "#F00");
+                break;
+            case "b":
+                frequency = 247;
+                turnOff = $("#section"+octave).find(".b");
+                turnOff.css("background", "#F00");
+                break;
+        }
+        var osc = playSound(frequency*octave, wave);
+        osc.start(0);
+        $('.section').on("mouseup", ".key", function() {
+            if(turnOff.hasClass("white")) {
+                turnOff.css("background", "#FFF");
+            } else if(turnOff.hasClass("black")) {
+                turnOff.css("background", "#000");
+            }
+            osc.stop(0);
+        });
+    });
+
+</script>
+
+</body>
+</html>
