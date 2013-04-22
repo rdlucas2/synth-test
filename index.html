@@ -106,14 +106,70 @@
 </div>
 
 <div style="clear:both;"></div>
+<table>
+    <tr>
+        <td>Oscillator 1:</td>
+        <td>
+            <select id="waveType">
+                <option value="0">Sine</option>
+                <option value="1">Square</option>
+                <option value="2">Sawtooth</option>
+                <option value="3">Triangle</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Volume 1:</td>
+        <td>
+            <select id="volume">
+                <option value="100">100%</option>
+                <option value="90">90%</option>
+                <option value="80">80%</option>
+                <option value="70">70%</option>
+                <option value="60">60%</option>
+                <option value="50">50%</option>
+                <option value="40">40%</option>
+                <option value="30">30%</option>
+                <option value="20">20%</option>
+                <option value="10">10%</option>
+                <option value="0">0%</option>
+            </select>
+        </td>
+    </tr>
 
-<select id="waveType">
-    <option value="0">Sine</option>
-    <option value="1">Square</option>
-    <option value="2">Sawtooth</option>
-    <option value="3">Triangle</option>
-</select>
+    <tr>
+        <td> Oscillator 2 (octaves):</td>
+        <td>
+            <select id="waveType2">
+                <option value="0">Sine</option>
+                <option value="1">Square</option>
+                <option value="2">Sawtooth</option>
+                <option value="3">Triangle</option>
+            </select>
+        </td>
+    </tr>
 
+    <tr>
+        <td>Volume 2:</td>
+        <td>
+            <select id="volume2">
+                <option value="100">100%</option>
+                <option value="90">90%</option>
+                <option value="80">80%</option>
+                <option value="70">70%</option>
+                <option value="60">60%</option>
+                <option value="50">50%</option>
+                <option value="40">40%</option>
+                <option value="30">30%</option>
+                <option value="20">20%</option>
+                <option value="10">10%</option>
+                <option value="0">0%</option>
+            </select>
+        </td>
+    </tr>
+
+
+</table>
 <script type="text/javascript">
 
     Array.prototype.remove = function() {
@@ -127,24 +183,61 @@
         return this;
     };
 
+    var volume = 1.0;
+    var volume2 = 1.0;
+
     context = new webkitAudioContext();
     var wave = 0;
+    var wave2 = 0;
+    var osc2on = true;
 
-    var playSound = function(frequency, type) {
-        gainNode = context.createGainNode();
-        gainNode.gain.value = 1.0;
+    var playSound = function(frequency, type, type2, volume, volume2) {
+
+        var gainNode = context.createGainNode();
+        gainNode.gain.value = volume;
         gainNode.connect(context.destination);
-        oscillator = context.createOscillator();
+
+        var gainNode2 = context.createGainNode();
+        gainNode2.gain.value = volume2;
+        gainNode2.connect(context.destination);
+
+        var oscillators = [];
+
+        var oscillator = context.createOscillator();
         oscillator.type = type; //0 = Sine Wave, 1 = Square Wave, 2 = Sawtooth wave, 3 = Triangle Wave
         oscillator.frequency.value = frequency;  //Frequency in hertz
         oscillator.connect(gainNode);
-        return oscillator
+
+        var oscillator2 = context.createOscillator();
+        oscillator2.type = type2; //0 = Sine Wave, 1 = Square Wave, 2 = Sawtooth wave, 3 = Triangle Wave
+        oscillator2.frequency.value = frequency*2;  //Frequency in hertz
+        oscillator2.connect(gainNode2);
+
+        oscillators.push(oscillator, oscillator2);
+
+        return oscillators;
     }
+
 
     var osc = null;
 
     $("#waveType").change(function() {
-        wave = parseInt(waveType.value);
+        wave = parseInt(this.value);
+    });
+
+    $("#waveType2").change(function() {
+        wave2 = parseInt(this.value);
+    });
+
+
+    console.log($("input"));
+
+    $("#volume").change(function() {
+       volume = parseInt(this.value)/100;
+    });
+
+    $("#volume2").change(function() {
+        volume2 = parseInt(this.value)/100;
     });
 
     var keyArray = [];
@@ -337,9 +430,11 @@
                 break;
         }
         if(doPlay) {
-            var osc = playSound(frequency*octaveShift, wave);
+            var osc = playSound(frequency*octaveShift, wave, wave2, volume, volume2);
             keyArray.push(upKey);
-            osc.start(0);
+            for(var i=0; i<osc.length; i++) {
+                osc[i].start(0);
+            }
             $(document).on("keyup", function(e) {
                 isAlreadyPressed = false;
                 keyArray.remove(key);
@@ -348,7 +443,9 @@
                 } else if(turnOff.hasClass("black")) {
                     turnOff.css("background", "#000");
                 }
-                osc.stop(0);
+                for(var i=0; i<osc.length; i++) {
+                    osc[i].stop(0);
+                }
             });
         }
     });
@@ -421,15 +518,19 @@
                 turnOff.css("background", "#F00");
                 break;
         }
-        var osc = playSound(frequency*octave, wave);
-        osc.start(0);
+        var osc = playSound(frequency*octave, wave, wave2, volume, volume2);
+        for(var i=0; i<osc.length; i++) {
+            osc[i].start(0);
+        }
         $('.section').on("mouseup", ".key", function() {
             if(turnOff.hasClass("white")) {
                 turnOff.css("background", "#FFF");
             } else if(turnOff.hasClass("black")) {
                 turnOff.css("background", "#000");
             }
-            osc.stop(0);
+            for(var i=0; i<osc.length; i++) {
+                osc[i].stop(0);
+            }
         });
     });
 
