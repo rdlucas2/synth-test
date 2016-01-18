@@ -229,9 +229,6 @@
         wave2 = this.value;
     });
 
-
-    console.log($("input"));
-
     $("#volume").change(function() {
        volume = parseInt(this.value)/100;
     });
@@ -250,9 +247,6 @@
     }
 
     $(document).on("keypress", function(e) {
-      console.log(e);
-      console.log(e.keyCode);
-      console.log(e.which);
         var isAlreadyPressed = keyArray.isPressed(e.keyCode);
         if(isAlreadyPressed) return;
         isAlreadyPressed = true;
