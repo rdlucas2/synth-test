@@ -111,10 +111,10 @@
         <td>Oscillator 1:</td>
         <td>
             <select id="waveType">
-                <option value="0">Sine</option>
-                <option value="1">Square</option>
-                <option value="2">Sawtooth</option>
-                <option value="3">Triangle</option>
+              <option value="sine">Sine</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Sawtooth</option>
+              <option value="triangle">Triangle</option>
             </select>
         </td>
     </tr>
@@ -141,10 +141,10 @@
         <td> Oscillator 2 (octaves):</td>
         <td>
             <select id="waveType2">
-                <option value="0">Sine</option>
-                <option value="1">Square</option>
-                <option value="2">Sawtooth</option>
-                <option value="3">Triangle</option>
+                <option value="sine">Sine</option>
+                <option value="square">Square</option>
+                <option value="sawtooth">Sawtooth</option>
+                <option value="triangle">Triangle</option>
             </select>
         </td>
     </tr>
@@ -187,17 +187,17 @@
     var volume2 = 1.0;
 
     context = new AudioContext();
-    var wave = 0;
-    var wave2 = 0;
+    var wave = 'sine';
+    var wave2 = 'sine';
     var osc2on = true;
 
     var playSound = function(frequency, type, type2, volume, volume2) {
 
-        var gainNode = context.createGainNode();
+        var gainNode = context.createGain();
         gainNode.gain.value = volume;
         gainNode.connect(context.destination);
 
-        var gainNode2 = context.createGainNode();
+        var gainNode2 = context.createGain();
         gainNode2.gain.value = volume2;
         gainNode2.connect(context.destination);
 
@@ -222,11 +222,11 @@
     var osc = null;
 
     $("#waveType").change(function() {
-        wave = parseInt(this.value);
+        wave = this.value;
     });
 
     $("#waveType2").change(function() {
-        wave2 = parseInt(this.value);
+        wave2 = this.value;
     });
 
 
@@ -250,6 +250,9 @@
     }
 
     $(document).on("keypress", function(e) {
+      console.log(e);
+      console.log(e.keyCode);
+      console.log(e.which);
         var isAlreadyPressed = keyArray.isPressed(e.keyCode);
         if(isAlreadyPressed) return;
         isAlreadyPressed = true;
@@ -258,7 +261,7 @@
         e.stopPropagation();
         var octaveShift = 1;
         var turnOff = null;
-        var key = e.keyCode;
+        var key = e.which;
         var frequency = 0;
         var doPlay = true;
         switch (key) {
